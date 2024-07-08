@@ -19,12 +19,12 @@ app.use('/users', usersController);
 
 sequelize.authenticate().then(async () => {
     await Users.sync();
-    const newUser = await Users.create({
-        id: 8,
-        userName: "aa",
-        userPassword: "12345",
-        userToken: "ddd"
-    });
+    // const newUser = await Users.create({
+    //     id: 9,
+    //     userName: "aa",
+    //     userPassword: "12345",
+    //     userToken: "ddd"
+    // });
 });
 
 app.listen(port, async () => {

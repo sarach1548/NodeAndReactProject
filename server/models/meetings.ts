@@ -1,13 +1,12 @@
-1
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes, INTEGER } from 'sequelize';
 import sequelize from '../dataAccess/dataAccess';
 import { Business } from './business';
+import { User } from './users';
 class Meetings extends Model {
   public id!: number;
-
-  public businessId!: number;
   public meetingDate!: Date;
-}
+  public userId!: number;
+};
 Meetings.init({
   id: {
     primaryKey: true,
@@ -15,21 +14,21 @@ Meetings.init({
     autoIncrement: true,
     allowNull: false
   },
-  businessId: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
   meetingDate: {
     type: DataTypes.DATE,
     allowNull: false
   },
+  custId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+
+  }
 },
+
   {
     sequelize,
     tableName: 'meetings',
   });
 
-Meetings.belongsTo(Business, { foreignKey: 'businessId' });
+Meetings.belongsTo(User, { foreignKey: 'custId' });
 export { Meetings };
-
-

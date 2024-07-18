@@ -1,3 +1,4 @@
+1
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../dataAccess/dataAccess';
   
@@ -7,7 +8,6 @@ class User extends Model {
   public userName!: string;
   public userPassword!: string;
   public userToken!: string;
-
 }
 
   User.init( {

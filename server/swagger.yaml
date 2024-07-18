@@ -4,44 +4,11 @@ info:
   version: 1.0.0
 
 paths:
-  /users:
-    get:
-      summary: Returns a list of users
-      responses:
-        '200':
-          description: A JSON array of user names
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-
-  /users/{id}:
-    get:
-      summary: Returns a user by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: A user object
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  name:
-                    type: string
-
-  /users:
+  /users/signUp:
     post:
-      summary: Creates a new user
+      summary: Add a new user
+      tags:
+        - Users
       requestBody:
         required: true
         content:
@@ -49,11 +16,19 @@ paths:
             schema:
               type: object
               properties:
-                name:
+                userName:
                   type: string
+                userPassword:
+                  type: string
+                userEmail:
+                  type: string
+              required:
+                - userName
+                - userPassword
+                - userEmail
       responses:
         '201':
-          description: User created successfully
+          description: Successfully added user
           content:
             application/json:
               schema:
@@ -63,10 +38,59 @@ paths:
                     type: integer
                   name:
                     type: string
+                  email:
+                    type: string
+                  token:
+                    type: string
 
-  /business:
+  /users/login:
+    post:
+      summary: User login
+      tags:
+        - Users
+      description: Authenticates a user and returns a token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                loginEmail:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                loginPassword:
+                  type: string
+                  format: password
+                  example: "userpassword"
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      userName:
+                        type: string
+                      userEmail:
+                        type: string
+                        format: email
+                  token:
+                    type: string
+                    example: "your.jwt.token.here"
+
+  /business/addBusiness:
     post:
       summary: Add a new business
+      tags:
+        - Business
       description: Adds a new business to the system
       requestBody:
         required: true
@@ -111,9 +135,11 @@ paths:
                     type: string
                     example: "+1234567890"
 
-  /business/{id}:
+  /business/updateBusiness/{id}:
     put:
       summary: Update an existing business
+      tags:
+        - Business
       description: Updates an existing business in the system
       parameters:
         - name: id
@@ -163,3 +189,178 @@ paths:
                   businessPhone:
                     type: string
                     example: "+0987654321"
+
+  /services/addService:
+    post:
+      summary: Add a new service
+      tags:
+        - Services
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Services'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Services'
+
+  /services/updateService/{serviceId}:
+    put:
+      summary: Update an existing service
+      tags:
+        - Services
+      parameters:
+        - name: serviceId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:  
+            schema:
+              $ref: '#/components/schemas/Services'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Services'
+
+  /services/getServices:
+    get:
+      summary: Get all services
+      tags:
+        - Services
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Services'
+
+  /services/deleteServiceById/{serviceId}:
+    delete:
+      summary: Delete a service by ID
+      tags:
+        - Services
+      parameters:
+        - name: serviceId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /meetings/addMeeting:
+    post:
+      summary: Add a new meeting
+      tags:
+        - Services
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Services'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Services'
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        userName:
+          type: string
+        userEmail:
+          type: string
+        userPassword:
+          type: string
+        userToken:
+          type: string
+      required:
+        - userName
+        - userEmail
+        - userPassword
+
+    Business:
+      type: object
+      properties:
+        id:
+          type: integer
+        businessName:
+          type: string
+        businessDescription:
+          type: string
+        businessEmail:
+          type: string
+        businessPhone:
+          type: string
+      required:
+        - businessName
+        - businessDescription
+        - businessEmail
+        - businessPhone
+
+    Services:
+      type: object
+      properties:
+        id:
+          type: integer
+        serviceName:
+          type: string
+        serviceDescription:
+          type: string
+        serviceCost:
+          type: number
+        serviceDuration:
+          type: integer
+      required:
+        - serviceName
+        - serviceDescription
+        - serviceCost
+        - serviceDuration
+
+    Meetings:
+      type: object
+      properties:
+        id:
+          type: integer
+        meetingDate:
+          type: string
+          format: date-time
+        userId:
+          type: integer
+        serviceId:
+          type: integer
+      required:
+        - meetingDate
+        - userId
+        - serviceId
+

@@ -17,7 +17,7 @@ Business.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      allowNull:false
+      allowNull: false
     },
     businessName: {
       type: DataTypes.STRING,

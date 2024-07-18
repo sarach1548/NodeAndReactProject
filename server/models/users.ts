@@ -7,6 +7,7 @@ class User extends Model {
   public id!: number;
   public userName!: string;
   public userPassword!: string;
+  public userEmail!:string;
   public userToken!: string;
 }
 
@@ -24,6 +25,11 @@ class User extends Model {
     userPassword: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    userEmail: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
     },
     userToken: {
         type: DataTypes.STRING,
